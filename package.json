@@ -1,27 +1,44 @@
 {
   "name": "taskmaster",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Linux task manager app like Google Tasks",
+  "main": "electron/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron": "electron .",
+    "dist": "vite build && electron-builder"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Harsh-pa-thak/TaskMaster.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["tasks", "linux", "electron", "productivity"],
+  "author": "Harsh Pathak",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Harsh-pa-thak/TaskMaster/issues"
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "concurrently": "^9.2.0",
+    "cross-env": "^7.0.3",
+    "electron": "^36.4.0",
+    "electron-builder": "^25.1.8",
+    "vite": "^6.3.5",
+    "wait-on": "^8.0.3"
   },
-  "homepage": "https://github.com/Harsh-pa-thak/TaskMaster#readme",
   "dependencies": {
     "better-sqlite3": "^13.0.3",
-    "electron-store": "^11.0.2",
     "node-notifier": "^10.0.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
+  },
+  "build": {
+    "appId": "com.harshpathak.taskmaster",
+    "productName": "TaskMaster",
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Utility"
+    },
+    "files": ["dist/**/*", "electron/**/*", "assets/**/*"]
   }
 }
