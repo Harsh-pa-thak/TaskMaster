@@ -16,5 +16,14 @@
   "bugs": {
     "url": "https://github.com/Harsh-pa-thak/TaskMaster/issues"
   },
-  "homepage": "https://github.com/Harsh-pa-thak/TaskMaster#readme"
+  "homepage": "https://github.com/Harsh-pa-thak/TaskMaster#readme",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "concurrently": "^10.0.5",
+    "cross-env": "^10.1.0",
+    "electron": "^44.1.1",
+    "electron-builder": "^26.15.3",
+    "vite": "^8.2.2",
+    "wait-on": "^9.1.0"
+  }
 }
