@@ -1,42 +1,21 @@
-import { useState, useEffect, useCallback } from 'react'
-import TaskItem from './TaskItem'
-import TaskForm from './TaskForm'
-
-const api = window.taskmaster
+import { useState } from 'react';
+import TaskQuickAdd from './TaskQuickAdd';
+import TaskSection from './TaskSection';
+import TaskForm from './TaskForm';
+import { useTasks } from '../hooks/useTasks';
 
 export default function TaskList({ list }) {
-  const [tasks, setTasks] = useState([])
-  const [lists, setLists] = useState([])
-  const [showForm, setShowForm] = useState(false)
-  const [quickTitle, setQuickTitle] = useState('')
-
-  const loadTasks = useCallback(async () => {
-    const data = await api.getTasks(list.id)
-    setTasks(data)
-  }, [list.id])
-
-  useEffect(() => {
-    loadTasks()
-    api.getLists().then(setLists)
-    api.onTasksUpdated(loadTasks)
-  }, [loadTasks])
-
-  const handleQuickAdd = async (e) => {
-    e.preventDefault()
-    if (!quickTitle.trim()) return
-    await api.createTask({ list_id: list.id, title: quickTitle.trim() })
-    setQuickTitle('')
-    loadTasks()
-  }
+  const [showForm, setShowForm] = useState(false);
+  const { pending, completed, lists, createTask, refreshTasks } = useTasks(list.id);
 
   const handleFormAdd = async (task) => {
-    await api.createTask(task)
-    setShowForm(false)
-    loadTasks()
-  }
+    await createTask(task);
+    setShowForm(false);
+  };
 
-  const pending = tasks.filter((t) => !t.is_completed)
-  const completed = tasks.filter((t) => t.is_completed)
+  const handleQuickAdd = async (title) => {
+    await createTask({ list_id: list.id, title });
+  };
 
   return (
     <div className="main-content">
@@ -56,19 +35,7 @@ export default function TaskList({ list }) {
         </div>
       </div>
 
-      <div className="quick-add" style={{ margin: '16px 28px 0' }}>
-        <form className="quick-add-row" onSubmit={handleQuickAdd}>
-          <span style={{ color: 'var(--text-muted)', fontSize: 18, lineHeight: 1 }}>+</span>
-          <input
-            id="quick-add-input"
-            className="quick-add-input"
-            placeholder="Quick add a task..."
-            value={quickTitle}
-            onChange={(e) => setQuickTitle(e.target.value)}
-          />
-          {quickTitle && <button type="submit" className="btn btn-primary btn-sm">Add</button>}
-        </form>
-      </div>
+      <TaskQuickAdd onAdd={handleQuickAdd} />
 
       <div className="task-list">
         {pending.length === 0 && completed.length === 0 && (
@@ -79,16 +46,8 @@ export default function TaskList({ list }) {
           </div>
         )}
 
-        {pending.map((t) => (
-          <TaskItem key={t.id} task={t} onRefresh={loadTasks} />
-        ))}
-
-        {completed.length > 0 && (
-          <>
-            <div className="task-section-label" style={{ marginTop: 20 }}>Completed · {completed.length}</div>
-            {completed.map((t) => <TaskItem key={t.id} task={t} onRefresh={loadTasks} />)}
-          </>
-        )}
+        <TaskSection tasks={pending} onRefresh={refreshTasks} />
+        <TaskSection title="Completed" tasks={completed} onRefresh={refreshTasks} />
       </div>
 
       {showForm && (
@@ -100,5 +59,5 @@ export default function TaskList({ list }) {
         />
       )}
     </div>
-  )
+  );
 }
