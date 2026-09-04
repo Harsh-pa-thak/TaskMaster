@@ -12,7 +12,7 @@ export default function App() {
   const loadLists = useCallback(async () => {
     const data = await api.getLists()
     setLists(data)
-    if (!activeList && data.length > 0) setActiveLis(data[0])
+    if (!activeList && data.length > 0) setActiveList(data[0])
   }, [activeList])
 
   useEffect(() => {
