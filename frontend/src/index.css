@@ -1,0 +1,23 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0e0e0e;
+  --card:      #1c1c1c;
+  --border:    #2a2a2a;
+  --text:      #e8e8e8;
+  --muted:     #555;
+  --accent:    #00bcd4;
+  --p-low:     #555;
+  --p-medium:  #f59e0b;
+  --p-high:    #f97316;
+  --p-urgent:  #ef4444;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
